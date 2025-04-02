@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.jobservice.mapper.CategoryMapper">
+
+    <!-- 부서명으로 부서 찾기 -->
+    <select id="findByName" parameterType="string" resultType="com.example.jobservice.vo.Category">
+        SELECT id, name FROM category WHERE name = #{name}
+    </select>
+
+    <!-- 새로운 부서 추가 -->
+    <insert id="insert" parameterType="com.example.jobservice.vo.Category" useGeneratedKeys="true" keyProperty="id">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO category (name) VALUES (#{name})
+    </insert>
+
+</mapper>
