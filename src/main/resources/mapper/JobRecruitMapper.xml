@@ -9,4 +9,12 @@
         VALUES (#{title}, #{workExperience}, #{url}, #{departmentId}, #{companyId}, #{categoryId}, #{typeId})
     </insert>
 
+    <select id="findAll" resultType="com.example.jobservice.vo.JobRecruit">
+        SELECT *
+        FROM job_recruit
+        ORDER BY created_at DESC
+        LIMIT #{pageable.pageSize}
+        OFFSET #{pageable.offset}
+    </select>
+
 </mapper>

@@ -4,6 +4,7 @@ import com.example.jobservice.dto.recruit.request.JobRecruitRequestDto;
 import com.example.jobservice.mapper.*;
 import com.example.jobservice.vo.JobRecruit;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,10 +29,18 @@ public class JobRecruitService {
             Long categoryId = categoryService.getCategoryId(request.getCategory());
             Long typeId = typeService.getTypeId(request.getType());
 
+
+
             JobRecruit jobRecruit = new JobRecruit(request.getTitle(), request.getWorkExperience(), request.getUrl(),
                     departmentId, companyId, categoryId, typeId);
 
             jobRecruitMapper.insert(jobRecruit);
         }
+    }
+
+    public void getJobRecruits(Pageable pageable) {
+        List<JobRecruit> recruits = jobRecruitMapper.findAll(pageable);
+
+
     }
 }
