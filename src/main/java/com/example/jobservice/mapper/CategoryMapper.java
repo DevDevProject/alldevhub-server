@@ -8,4 +8,6 @@ public interface CategoryMapper {
 
     Category findByName(@Param("name") String name);
     void insert(Category name);
+
+    Category findById(Long id);
 }

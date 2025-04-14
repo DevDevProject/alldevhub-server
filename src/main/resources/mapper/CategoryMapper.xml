@@ -17,4 +17,7 @@
         INSERT INTO category (name) VALUES (#{name})
     </insert>
 
+    <select id="findById" parameterType="long" resultType="com.example.jobservice.vo.Category">
+        SELECT * FROM category WHERE id = #{id}
+    </select>
 </mapper>

@@ -5,8 +5,8 @@
 <mapper namespace="com.example.jobservice.mapper.JobRecruitMapper">
 
     <insert id="insert" parameterType="com.example.jobservice.vo.JobRecruit" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO job_recruit (title, work_experience, url, department_id, company_id, category_id, type_id)
-        VALUES (#{title}, #{workExperience}, #{url}, #{departmentId}, #{companyId}, #{categoryId}, #{typeId})
+        INSERT INTO job_recruit (title, work_experience, url, department_id, company_id, type_id)
+        VALUES (#{title}, #{workExperience}, #{url}, #{departmentId}, #{companyId}, #{typeId})
     </insert>
 
     <select id="findAll" resultType="com.example.jobservice.vo.JobRecruit">

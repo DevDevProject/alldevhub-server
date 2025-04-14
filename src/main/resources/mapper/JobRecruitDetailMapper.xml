@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.jobservice.mapper.JobRecruitDetailMapper">
+    <insert id="insert" parameterType="com.example.jobservice.vo.JobRecruitDetail" useGeneratedKeys="true" keyProperty="id">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO job_recruit_detail (responsibility, requirement, preference, benefit, process, job_recruit_id)
+        VALUES (#{responsibility}, #{requirement}, #{preference}, #{benefit}, #{process}, #{jobRecruitId})
+    </insert>
+</mapper>

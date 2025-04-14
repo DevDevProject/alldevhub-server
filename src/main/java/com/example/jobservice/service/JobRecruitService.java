@@ -20,27 +20,26 @@ public class JobRecruitService {
     private final CompanyService companyService;
     private final CategoryService categoryService;
     private final DepartmentService departmentService;
+    private final JobRecruitDetailService jobRecruitDetailService;
 
     @Transactional
     public void save(JobRecruitRequestDto[] requests) {
         for(JobRecruitRequestDto request : requests) {
-            Long departmentId = departmentService.getDepartmentId(request.getDepartment());
-            Long companyId = companyService.getCompanyId(request.getCompany());
-            Long categoryId = categoryService.getCategoryId(request.getCategory());
-            Long typeId = typeService.getTypeId(request.getType());
+            Long departmentId = departmentService.getDepartmentId(request.getBasic().getDepartment());
+            Long companyId = companyService.getCompanyId(request.getBasic().getCompany());
+            Long typeId = typeService.getTypeId(request.getBasic().getType());
 
-
-
-            JobRecruit jobRecruit = new JobRecruit(request.getTitle(), request.getWorkExperience(), request.getUrl(),
-                    departmentId, companyId, categoryId, typeId);
+            JobRecruit jobRecruit = new JobRecruit(request.getBasic().getTitle(), request.getBasic().getWorkExperience(), request.getBasic().getUrl(),
+                    departmentId, companyId, typeId);
 
             jobRecruitMapper.insert(jobRecruit);
+
+            jobRecruitDetailService.save(request, jobRecruit.getId());
+            categoryService.save(request.getBasic().getCategory(), request.getDetail(), jobRecruit.getId());
         }
     }
 
     public void getJobRecruits(Pageable pageable) {
         List<JobRecruit> recruits = jobRecruitMapper.findAll(pageable);
-
-
     }
 }
