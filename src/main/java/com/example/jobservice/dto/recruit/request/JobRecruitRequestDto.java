@@ -11,6 +11,10 @@ public class JobRecruitRequestDto {
     private BasicInfo basic;
     private DetailInfo detail;
 
+    public JobRecruitRequestDto() {
+
+    }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
