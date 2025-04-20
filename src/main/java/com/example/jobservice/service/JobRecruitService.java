@@ -3,6 +3,7 @@ package com.example.jobservice.service;
 import com.example.jobservice.dto.recruit.request.JobRecruitRequestDto;
 import com.example.jobservice.mapper.*;
 import com.example.jobservice.vo.JobRecruit;
+import com.example.jobservice.vo.jobrecruit.JobRecruitPaging;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,11 @@ public class JobRecruitService {
         }
     }
 
-    public void getJobRecruits(Pageable pageable) {
-        List<JobRecruit> recruits = jobRecruitMapper.findAll(pageable);
+    public List<JobRecruitPaging> getJobRecruits(Pageable pageable) {
+        List<JobRecruitPaging> recruits = jobRecruitMapper.findAll(pageable);
+
+        System.out.println(recruits.size());
+
+        return recruits;
     }
 }

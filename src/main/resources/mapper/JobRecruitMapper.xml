@@ -9,12 +9,47 @@
         VALUES (#{title}, #{workExperience}, #{url}, #{departmentId}, #{companyId}, #{typeId})
     </insert>
 
-    <select id="findAll" resultType="com.example.jobservice.vo.JobRecruit">
-        SELECT *
-        FROM job_recruit
-        ORDER BY created_at DESC
+    <select id="findAll" resultMap="JobRecruitMap">
+        SELECT
+            jr.id, jr.title, jr.created_at, jr.work_experience, jr.url,
+            c.name AS company_name,
+            t.name AS type_name
+        FROM job_recruit jr
+        JOIN company c ON c.id = jr.company_id
+        JOIN type t ON t.id = jr.type_id
+        ORDER BY jr.created_at DESC
         LIMIT #{pageable.pageSize}
         OFFSET #{pageable.offset}
     </select>
+    <select id="findCategoriesByRecruitId" resultType="string">
+        SELECT c.name
+        FROM job_recruit_category jrc
+        JOIN category c ON c.id = jrc.category_id
+        WHERE jrc.job_recruit_id = #{id}
+    </select>
+    <select id="findStacksByRecruitId" resultType="string">
+        SELECT s.name
+        FROM job_recruit_stack jrs
+        JOIN stack s ON s.id = jrs.stack_id
+        WHERE jrs.job_recruit_id = #{id}
+    </select>
 
+
+    <resultMap id="JobRecruitMap" type="com.example.jobservice.vo.jobrecruit.JobRecruitPaging">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="url" column="url"/>
+        <result property="workExperience" column="work_experience"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="company" column="company_name" />
+        <result property="type" column="type_name" />
+
+        <collection property="categories" ofType="string"
+                    select="findCategoriesByRecruitId" column="id"/>
+
+        <collection property="stacks" ofType="string"
+                    select="findStacksByRecruitId" column="id"/>
+    </resultMap>
 </mapper>
+
+

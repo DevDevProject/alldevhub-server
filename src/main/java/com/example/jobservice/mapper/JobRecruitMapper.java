@@ -1,5 +1,6 @@
 package com.example.jobservice.mapper;
 import com.example.jobservice.vo.JobRecruit;
+import com.example.jobservice.vo.jobrecruit.JobRecruitPaging;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
@@ -10,5 +11,5 @@ public interface JobRecruitMapper {
 
     void insert(JobRecruit jobRecruit);
 
-    List<JobRecruit> findAll(@Param("pageable") Pageable pageable);
+    List<JobRecruitPaging> findAll(@Param("pageable") Pageable pageable);
 }
