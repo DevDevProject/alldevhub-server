@@ -18,4 +18,19 @@
         INSERT INTO stack (name) VALUES (#{name})
     </insert>
 
+    <select id="findPopularStacks" resultType="com.example.jobservice.dto.stack.response.StackCountDto">
+        SELECT s.name, COUNT(*) AS count
+        FROM (
+                SELECT MIN(jr.id) AS min_id
+                FROM job_recruit jr
+                WHERE  jr.created_at >= NOW() - INTERVAL 30 DAY
+                GROUP BY jr.title, jr.company_id
+             ) AS unique_jobs
+        JOIN job_recruit_stack jrs ON unique_jobs.min_id = jrs.job_recruit_id
+        JOIN stack s ON s.id = jrs.stack_id
+        GROUP BY s.name
+        ORDER BY count DESC
+        LIMIT 10
+    </select>
+
 </mapper>
