@@ -1,4 +1,4 @@
-package com.example.jobservice.service;
+package com.example.jobservice.util;
 
 import com.example.jobservice.mapper.CategoryMapper;
 import com.example.jobservice.mapper.CategoryStackMapper;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,7 +31,11 @@ public class Classifier {
 
     public ClassificationResult classify(String text) {
         List<Stack> matchedStacks = stacks.stream()
-                .filter(stack -> text.toLowerCase().contains(stack.getName().toLowerCase()))
+                .filter(stack -> {
+                    String keyword = stack.getName();
+                    Pattern pattern = Pattern.compile("\\b" + Pattern.quote(keyword) + "\\b", Pattern.CASE_INSENSITIVE);
+                    return pattern.matcher(text).find();
+                })
                 .toList();
 
         Set<Long> categoryIds = matchedStacks.stream()
@@ -49,7 +54,11 @@ public class Classifier {
 
     public List<Stack> classifyStack(String text) {
         return stacks.stream()
-                .filter(stack -> text.toLowerCase().contains(stack.getName().toLowerCase()))
+                .filter(stack -> {
+                    String keyword = stack.getName();
+                    Pattern pattern = Pattern.compile("\\b" + Pattern.quote(keyword) + "\\b", Pattern.CASE_INSENSITIVE);
+                    return pattern.matcher(text).find();
+                })
                 .toList();
     }
 
