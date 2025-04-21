@@ -1,6 +1,7 @@
 package com.example.jobservice.service;
 
 import com.example.jobservice.dto.recruit.request.JobRecruitRequestDto;
+import com.example.jobservice.util.Classifier;
 import com.example.jobservice.vo.JobRecruit;
 import com.example.jobservice.mapper.JobRecruitMapper;
 import com.example.jobservice.vo.Stack;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 
 import java.util.Arrays;
 import java.util.List;

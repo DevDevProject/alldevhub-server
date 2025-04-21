@@ -1,9 +1,11 @@
 package com.example.jobservice.service;
 
+import com.example.jobservice.dto.category.response.CategoryCountDto;
 import com.example.jobservice.dto.recruit.request.JobRecruitRequestDto;
 import com.example.jobservice.mapper.CategoryMapper;
 import com.example.jobservice.mapper.JobRecruitCategoryMapper;
 import com.example.jobservice.mapper.JobRecruitStackMapper;
+import com.example.jobservice.util.Classifier;
 import com.example.jobservice.vo.Category;
 import com.example.jobservice.vo.Stack;
 import lombok.RequiredArgsConstructor;
@@ -67,5 +69,9 @@ public class CategoryService {
                 .forEach(stack -> {
                     jobRecruitStackMapper.insert(stack, jobRecruitId);
                 });
+    }
+
+    public List<CategoryCountDto> getPopularCategories() {
+        return categoryMapper.findPopularCategories();
     }
 }

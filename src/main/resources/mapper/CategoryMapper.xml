@@ -20,4 +20,19 @@
     <select id="findById" parameterType="long" resultType="com.example.jobservice.vo.Category">
         SELECT * FROM category WHERE id = #{id}
     </select>
+
+    <select id="findPopularCategories" resultType="com.example.jobservice.dto.category.response.CategoryCountDto">
+        SELECT name, COUNT(*) AS count
+        FROM (
+                SELECT MIN(jr.id) AS min_id
+                FROM job_recruit jr
+                WHERE jr.created_at >= NOW() - INTERVAL 30 DAY
+                GROUP BY jr.title, jr.company_id
+             ) AS unique_jobs
+        JOIN job_recruit_category jrc ON unique_jobs.min_id = jrc.job_recruit_id
+        JOIN category c ON c.id = jrc.category_id
+        GROUP BY c.name
+        ORDER BY count DESC
+        LIMIT 5
+    </select>
 </mapper>

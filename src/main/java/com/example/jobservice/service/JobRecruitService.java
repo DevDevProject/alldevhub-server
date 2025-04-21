@@ -43,8 +43,6 @@ public class JobRecruitService {
     public List<JobRecruitPaging> getJobRecruits(Pageable pageable) {
         List<JobRecruitPaging> recruits = jobRecruitMapper.findAll(pageable);
 
-        System.out.println(recruits.size());
-
         return recruits;
     }
 }

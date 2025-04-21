@@ -30,7 +30,7 @@
         JOIN stack s ON s.id = jrs.stack_id
         GROUP BY s.name
         ORDER BY count DESC
-        LIMIT 10
+        LIMIT 5
     </select>
 
 </mapper>
