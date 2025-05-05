@@ -1,6 +1,8 @@
 package com.example.jobservice.service;
 
 import com.example.jobservice.dto.recruit.request.JobRecruitRequestDto;
+import com.example.jobservice.dto.recruit.request.JobSearchCondition;
+import com.example.jobservice.dto.recruit.response.JobRecruitListResponseDto;
 import com.example.jobservice.mapper.*;
 import com.example.jobservice.vo.JobRecruit;
 import com.example.jobservice.vo.jobrecruit.JobRecruitPaging;
@@ -31,7 +33,7 @@ public class JobRecruitService {
             Long typeId = typeService.getTypeId(request.getBasic().getType());
 
             JobRecruit jobRecruit = new JobRecruit(request.getBasic().getTitle(), request.getBasic().getWorkExperience(), request.getBasic().getUrl(),
-                    departmentId, companyId, typeId);
+                    departmentId, companyId, typeId, request.getBasic().getDeadline());
 
             jobRecruitMapper.insert(jobRecruit);
 
@@ -40,9 +42,12 @@ public class JobRecruitService {
         }
     }
 
-    public List<JobRecruitPaging> getJobRecruits(Pageable pageable) {
-        List<JobRecruitPaging> recruits = jobRecruitMapper.findAll(pageable);
+    public JobRecruitListResponseDto search(JobSearchCondition condition, Pageable pageable, String sort) {
+        List<JobRecruitPaging> searchedRecruits = jobRecruitMapper.findAllWithConditions(condition, pageable, sort);
+        Integer count = jobRecruitMapper.findAllWithConditionsCount(condition);
 
-        return recruits;
+        return new JobRecruitListResponseDto(searchedRecruits, count);
     }
+
+
 }

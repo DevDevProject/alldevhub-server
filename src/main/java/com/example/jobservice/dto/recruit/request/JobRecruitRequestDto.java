@@ -1,5 +1,6 @@
 package com.example.jobservice.dto.recruit.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,7 @@ public class JobRecruitRequestDto {
         private String field;
         private String location;
         private String period;
+        private String deadline;
     }
 
     @Data

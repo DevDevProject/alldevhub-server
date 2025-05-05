@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -24,6 +25,7 @@ public class JobRecruitPaging {
     private LocalDateTime createdAt;
     private String company;
     private String type;
-    private List<String> categories;
-    private List<String> stacks;
+    private String deadline;
+    private List<String> categories = new ArrayList<>();
+    private List<String> stacks = new ArrayList<>();
 }
