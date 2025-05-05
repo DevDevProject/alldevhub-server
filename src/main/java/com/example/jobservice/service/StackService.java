@@ -1,5 +1,6 @@
 package com.example.jobservice.service;
 
+import com.example.jobservice.dto.stack.response.PopularStackResponseDto;
 import com.example.jobservice.dto.stack.response.StackCountDto;
 import com.example.jobservice.mapper.StackMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ public class StackService {
 
     private final StackMapper stackMapper;
 
-    public List<StackCountDto> findPopular() {
-        return stackMapper.findPopularStacks();
+    public PopularStackResponseDto findPopular() {
+        return new PopularStackResponseDto(stackMapper.findPopularStacks(), stackMapper.findTotalCount());
     }
 }

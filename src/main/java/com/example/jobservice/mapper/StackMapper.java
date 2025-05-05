@@ -9,4 +9,6 @@ public interface StackMapper {
     List<Stack> findAll();
 
     List<StackCountDto> findPopularStacks();
+
+    int findTotalCount();
 }

@@ -1,5 +1,6 @@
 package com.example.jobservice.controller;
 
+import com.example.jobservice.dto.stack.response.PopularStackResponseDto;
 import com.example.jobservice.dto.stack.response.StackCountDto;
 import com.example.jobservice.service.StackService;
 import com.example.jobservice.vo.jobrecruit.JobRecruitPaging;
@@ -19,7 +20,7 @@ public class StackController {
 
     @GetMapping("/api/stack/rank")
     public ResponseEntity<?> getPopularStacks() {
-        List<StackCountDto> response = stackService.findPopular();
+        PopularStackResponseDto response = stackService.findPopular();
 
         return ResponseEntity.ok().body(response);
     }

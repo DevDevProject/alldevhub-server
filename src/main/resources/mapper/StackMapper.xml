@@ -17,7 +17,7 @@
     <insert id="insert" parameterType="string" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO stack (name) VALUES (#{name})
     </insert>
-
+    
     <select id="findPopularStacks" resultType="com.example.jobservice.dto.stack.response.StackCountDto">
         SELECT s.name, COUNT(*) AS count
         FROM (
@@ -31,6 +31,11 @@
         GROUP BY s.name
         ORDER BY count DESC
         LIMIT 5
+    </select>
+    <select id="findTotalCount" resultType="int">
+        SELECT COUNT(*) FROM job_recruit_stack jrs
+        JOIN job_recruit jr ON jr.id = jrs.job_recruit_id
+        WHERE jr.created_at >= NOW() - INTERVAL 30 DAY
     </select>
 
 </mapper>
