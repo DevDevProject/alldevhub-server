@@ -129,6 +129,12 @@
                     #{size}
                 </foreach>
             </if>
+            <if test="true">
+                AND (
+                    jr.deadline = '상시채용'
+                    OR jr.deadline >= CURRENT_DATE
+                )
+            </if>
          </where>
         <choose>
             <when test="sort == 'deadline'">
@@ -169,7 +175,7 @@
                 #{stack}
             </foreach>
             GROUP BY job_recruit_id
-            HAVING COUNT(DISTINCT s.name) = #{stackSize}
+            HAVING COUNT(DISTINCT s.name) = ${condition.stacks.size}
             ) matched_stacks ON matched_stacks.job_recruit_id = jr.id
         </if>
 
@@ -220,6 +226,12 @@
                 <foreach item="size" collection="condition.companyTypes" open="(" separator="," close=")">
                     #{size}
                 </foreach>
+            </if>
+            <if test="true">
+                AND (
+                jr.deadline = '상시채용'
+                OR jr.deadline >= CURRENT_DATE
+                )
             </if>
         </where>
     </select>

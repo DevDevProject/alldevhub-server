@@ -28,7 +28,7 @@ public class JobRecruitController {
     }
 
     @PostMapping("/api/search")
-    public ResponseEntity<?> search(@RequestBody JobSearchCondition condition, Pageable pageable, @RequestParam String sort) {
+    public ResponseEntity<?> search(@RequestBody JobSearchCondition condition, Pageable pageable, @RequestParam(defaultValue = "created_at") String sort) {
         JobRecruitListResponseDto response = jobRecruitService.search(condition, pageable, sort);
         return ResponseEntity.ok(response);
     }
