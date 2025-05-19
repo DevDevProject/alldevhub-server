@@ -15,7 +15,7 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/api/category/rank")
+    @GetMapping("/api/recruit/category/rank")
     public ResponseEntity<?> getPopularCategories() {
         List<CategoryCountDto> response = categoryService.getPopularCategories();
 

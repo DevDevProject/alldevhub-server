@@ -18,7 +18,7 @@ public class StackController {
 
     private final StackService stackService;
 
-    @GetMapping("/api/stack/rank")
+    @GetMapping("/api/recruit/stack/rank")
     public ResponseEntity<?> getPopularStacks() {
         PopularStackResponseDto response = stackService.findPopular();
 
