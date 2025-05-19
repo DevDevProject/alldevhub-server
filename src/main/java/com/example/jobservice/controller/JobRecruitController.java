@@ -20,16 +20,23 @@ public class JobRecruitController {
 
     private final JobRecruitService jobRecruitService;
 
-    @PostMapping("/recruit/save")
+    @PostMapping("/api/recruit/save")
     public ResponseEntity<?> insertJobRecruits(@RequestBody JobRecruitRequestDto[] request) {
         jobRecruitService.save(request);
 
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/api/search")
+    @PostMapping("/api/recruit/search")
     public ResponseEntity<?> search(@RequestBody JobSearchCondition condition, Pageable pageable, @RequestParam(defaultValue = "created_at") String sort) {
         JobRecruitListResponseDto response = jobRecruitService.search(condition, pageable, sort);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/api/recruit/url")
+    public ResponseEntity<?> getRecruitsUrls() {
+        List<String> response = jobRecruitService.getAllUrls();
+
         return ResponseEntity.ok(response);
     }
 }

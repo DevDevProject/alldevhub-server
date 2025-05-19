@@ -236,6 +236,10 @@
         </where>
     </select>
 
+    <select id="findAllUrls" resultType="string">
+        SELECT jr.url
+        FROM job_recruit as jr
+    </select>
 </mapper>
 
 

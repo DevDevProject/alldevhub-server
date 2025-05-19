@@ -33,4 +33,6 @@ public interface JobRecruitMapper {
 
 
     Integer findAllWithConditionsCount(@Param("condition") JobSearchCondition condition);
+
+    List<String> findAllUrls();
 }

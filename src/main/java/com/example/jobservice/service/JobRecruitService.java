@@ -50,4 +50,9 @@ public class JobRecruitService {
     }
 
 
+    public List<String> getAllUrls() {
+        List<String> urls = jobRecruitMapper.findAllUrls();
+
+        return urls;
+    }
 }
