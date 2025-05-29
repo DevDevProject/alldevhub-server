@@ -190,7 +190,7 @@
                 #{category}
             </foreach>
             GROUP BY job_recruit_id
-            HAVING COUNT(DISTINCT c2.name) = #{categorySize}
+            HAVING COUNT(DISTINCT c2.name) = ${condition.categories.size}
             ) matched_categories ON matched_categories.job_recruit_id = jr.id
         </if>
 

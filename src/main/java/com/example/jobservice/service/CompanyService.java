@@ -1,7 +1,6 @@
 package com.example.jobservice.service;
 
 import com.example.jobservice.mapper.CompanyMapper;
-import com.example.jobservice.vo.Category;
 import com.example.jobservice.vo.Company;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,5 +22,9 @@ public class CompanyService {
         companyMapper.insert(newCompany);
 
         return companyMapper.findByName(name).getId();
+    }
+
+    public String getCompanyName(Long recruitId) {
+        return companyMapper.findByRecruitId(recruitId);
     }
 }

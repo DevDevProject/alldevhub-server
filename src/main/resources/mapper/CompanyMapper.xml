@@ -17,4 +17,11 @@
         INSERT INTO company (name) VALUES (#{name})
     </insert>
 
+    <select id="findByRecruitId" parameterType="long" resultType="string">
+        SELECT c.name
+        FROM job_recruit
+        JOIN company c ON job_recruit.company_id = c.id
+        WHERE job_recruit.id = #{recruitId}
+    </select>
+
 </mapper>

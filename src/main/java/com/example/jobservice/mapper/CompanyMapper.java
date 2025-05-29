@@ -8,4 +8,7 @@ public interface CompanyMapper {
 
     Company findByName(@Param("name") String name);
     void insert(Company name);
+
+    String findByRecruitId(@Param("recruitId") Long recruitId);
+
 }

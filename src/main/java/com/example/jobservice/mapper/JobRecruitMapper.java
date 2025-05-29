@@ -1,5 +1,7 @@
 package com.example.jobservice.mapper;
 import com.example.jobservice.dto.recruit.request.JobSearchCondition;
+import com.example.jobservice.dto.recruit.response.RecruitDetailResponseDto;
+import com.example.jobservice.dto.recruit.response.data.RecruitDetailDataDto;
 import com.example.jobservice.vo.JobRecruit;
 import com.example.jobservice.vo.jobrecruit.JobRecruitPaging;
 import org.apache.ibatis.annotations.Mapper;
@@ -35,4 +37,6 @@ public interface JobRecruitMapper {
     Integer findAllWithConditionsCount(@Param("condition") JobSearchCondition condition);
 
     List<String> findAllUrls();
+
+    RecruitDetailDataDto findRecruitDetail(@Param("recruitId") Long recruitId);
 }

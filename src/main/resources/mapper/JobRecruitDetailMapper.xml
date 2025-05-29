@@ -10,4 +10,28 @@
         INSERT INTO job_recruit_detail (responsibility, requirement, preference, benefit, process, job_recruit_id)
         VALUES (#{responsibility}, #{requirement}, #{preference}, #{benefit}, #{process}, #{jobRecruitId})
     </insert>
+
+    <select id="findRecruitDetail" resultType="com.example.jobservice.dto.recruit.response.data.RecruitDetailDataDto">
+        SELECT responsibility, requirement, preference, benefit, process
+        FROM job_recruit_detail as jrd
+        WHERE jrd.job_recruit_id = #{recruitId}
+    </select>
+
+    <select id="findRecruitOptions" resultType="com.example.jobservice.dto.recruit.response.data.RecruitOptionsDataDto">
+        SELECT
+            jr.title,
+            jr.url,
+            jr.deadline,
+            jr.work_experience AS experience,
+            t.name AS type,
+            d.name AS department,
+            GROUP_CONCAT(c.name SEPARATOR ', ') AS category
+        FROM job_recruit jr
+                 LEFT JOIN type t ON jr.type_id = t.id
+                 LEFT JOIN department d ON jr.department_id = d.id
+                 LEFT JOIN job_recruit_category jrc ON jr.id = jrc.job_recruit_id
+                 LEFT JOIN category c ON jrc.category_id = c.id
+        WHERE jr.id = #{recruitId}
+        GROUP BY jr.id
+    </select>
 </mapper>
