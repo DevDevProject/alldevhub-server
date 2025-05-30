@@ -35,7 +35,7 @@ public class JobRecruitService {
         for(JobRecruitRequestDto request : requests) {
             Long departmentId = departmentService.getDepartmentId(request.getBasic().getDepartment());
             Long companyId = companyService.getCompanyId(request.getBasic().getCompany());
-            Long typeId = typeService.getTypeId(request.getBasic().getType());
+            Long typeId = typeService.getTypeId(request.getBasic().getType(), request.getBasic().getTitle());
 
             JobRecruit jobRecruit = new JobRecruit(request.getBasic().getTitle(), request.getBasic().getWorkExperience(), request.getBasic().getUrl(),
                     departmentId, companyId, typeId, request.getBasic().getDeadline());

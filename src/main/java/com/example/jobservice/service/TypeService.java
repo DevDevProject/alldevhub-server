@@ -5,22 +5,35 @@ import com.example.jobservice.vo.Type;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class TypeService {
 
     private final TypeMapper typeMapper;
 
-    public Long getTypeId(String name) {
-        Type type = typeMapper.findByName(name);
+    public Long getTypeId(String name, String title) {
+        Map<String, String> keywordToTypeName = Map.of(
+                "인턴", "인턴",
+                "계약", "계약직",
+                "정규직", "정규직"
+        );
 
-        if(type != null)
-            return type.getId();
+        if(name == null) {
+            for (Map.Entry<String, String> entry : keywordToTypeName.entrySet()) {
+                if (title.contains(entry.getKey())) {
+                    Type type = typeMapper.findByName(entry.getValue());
+                    if (type != null) {
+                        return type.getId();
+                    }
+                }
+            }
+        }
 
-        Type newType = Type.builder().name(name).build();
 
-        typeMapper.insert(newType);
+        Type type = typeMapper.findByName("정규직");
 
-        return typeMapper.findByName(name).getId();
+        return type.getId();
     }
 }
