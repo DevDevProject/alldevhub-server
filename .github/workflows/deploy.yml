@@ -1,0 +1,38 @@
+name: Deploy Recruit Service
+
+on:
+  push:
+    branches: [ "main" ] # 또는 배포 브랜치
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for Gradle
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Copy SSH key
+        run: |
+          echo "${{ secrets.EC2_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+
+      - name: Deploy to EC2
+        run: |
+          scp -i private_key.pem build/libs/*.jar ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/alldevhub/${{ secrets.APP_NAME }}.jar
+          ssh -i private_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << EOF
+            pkill -f '${{ secrets.APP_NAME }}.jar' || true
+            nohup java -jar /home/${{ secrets.EC2_USER }}/alldevhub/${{ secrets.APP_NAME }}.jar > /home/${{ secrets.EC2_USER }}/alldevhub/nohup.out 2>&1 &
+          EOF
