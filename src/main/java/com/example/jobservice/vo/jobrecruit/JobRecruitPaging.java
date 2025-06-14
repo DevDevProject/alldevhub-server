@@ -24,6 +24,8 @@ public class JobRecruitPaging {
     private String workExperience;
     private LocalDateTime createdAt;
     private String company;
+    private String region;
+    private String logoUrl;
     private String type;
     private String deadline;
     private List<String> categories = new ArrayList<>();

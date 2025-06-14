@@ -60,7 +60,7 @@
     <select id="findAllWithConditions" resultMap="JobRecruitMap">
         SELECT
         jr.id, jr.title, jr.created_at, jr.work_experience, jr.url,
-        c.name AS company_name,
+        c.name AS company_name, c.region, c.logo_url,
         t.name AS type_name,
         jr.deadline
         FROM job_recruit jr

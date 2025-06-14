@@ -1,9 +1,11 @@
 package com.example.jobservice.service;
 
+import com.example.jobservice.dto.company.response.CompanyNameLogoResponse;
 import com.example.jobservice.dto.recruit.request.JobRecruitRequestDto;
 import com.example.jobservice.dto.recruit.request.JobSearchCondition;
 import com.example.jobservice.dto.recruit.response.JobRecruitListResponseDto;
 import com.example.jobservice.dto.recruit.response.data.RecruitDetailDataDto;
+import com.example.jobservice.http.CompanyServiceClient;
 import com.example.jobservice.mapper.*;
 import com.example.jobservice.vo.JobRecruit;
 import com.example.jobservice.vo.jobrecruit.JobRecruitPaging;
@@ -28,6 +30,7 @@ public class JobRecruitService {
     private final DepartmentService departmentService;
     private final JobRecruitDetailService jobRecruitDetailService;
     private final KafkaProducerService kafkaProducerService;
+    private final CompanyServiceClient companyServiceClient;
 
     @Transactional
     public void save(JobRecruitRequestDto[] requests) {
