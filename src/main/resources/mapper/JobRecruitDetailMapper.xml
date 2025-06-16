@@ -11,6 +11,14 @@
         VALUES (#{responsibility}, #{requirement}, #{preference}, #{benefit}, #{process}, #{jobRecruitId})
     </insert>
 
+    <insert id="insertByImage" parameterType="com.example.jobservice.vo.JobRecruitDetail" useGeneratedKeys="true" keyProperty="id">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO job_recruit_detail (body_url, job_recruit_id)
+        VALUES (#{bodyUrl}, #{jobRecruitId})
+    </insert>
+
     <select id="findRecruitDetail" resultType="com.example.jobservice.dto.recruit.response.data.RecruitDetailDataDto">
         SELECT responsibility, requirement, preference, benefit, process
         FROM job_recruit_detail as jrd

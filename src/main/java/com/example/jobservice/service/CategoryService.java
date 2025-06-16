@@ -24,6 +24,39 @@ public class CategoryService {
     private final JobRecruitCategoryMapper jobRecruitCategoryMapper;
     private final JobRecruitStackMapper jobRecruitStackMapper;
 
+    public void save(String categoryName, String body, Long jobRecruitId) {
+        if(categoryName == null) {
+            Classifier.ClassificationResult result = classifier.classify(body);
+
+            result.getCategories().stream()
+                    .distinct()
+                    .forEach(name -> {
+                        Category category = categoryMapper.findByName(name);
+                        if (category != null)
+                            jobRecruitCategoryMapper.insert(jobRecruitId, category.getId());
+                    });
+
+            result.getStacks().stream()
+                    .distinct()
+                    .forEach(stack -> {
+                        jobRecruitStackMapper.insert(stack, jobRecruitId);
+                    });
+
+            return;
+        }
+
+        Category category = categoryMapper.findByName(categoryName);
+        if (category != null)
+            jobRecruitCategoryMapper.insert(jobRecruitId, category.getId());
+
+        List<Stack> stacks = classifier.classifyStack(body);
+        stacks.stream()
+                .distinct()
+                .forEach(stack -> {
+                    jobRecruitStackMapper.insert(stack, jobRecruitId);
+                });
+    }
+
     public void save(String categoryName, JobRecruitRequestDto.DetailInfo detail, Long jobRecruitId) {
         if (categoryName == null) {
             String merge = Stream.of(

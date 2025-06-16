@@ -38,5 +38,8 @@ public interface JobRecruitMapper {
 
     List<String> findAllUrls();
 
-    RecruitDetailDataDto findRecruitDetail(@Param("recruitId") Long recruitId);
+    List<JobRecruitPaging> findRecruitsByCompany(@Param("companyName") String companyName, @Param("pageable") Pageable pageable);
+
+    Integer findRecruitsByCompanyCount(@Param("companyName") String companyName);
+
 }

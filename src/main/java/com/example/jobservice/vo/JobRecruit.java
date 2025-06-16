@@ -20,11 +20,12 @@ public class JobRecruit {
     private Long companyId;
     private Long typeId;
     private String deadline;
+    private String postingType;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public JobRecruit(String title, String workExperience, String url, Long departmentId, Long companyId, Long typeId, String deadline) {
+    public JobRecruit(String title, String workExperience, String url, Long departmentId, Long companyId, Long typeId, String deadline, String postingType) {
         this.title = title;
         this.workExperience = workExperience;
         this.url = url;
@@ -32,5 +33,6 @@ public class JobRecruit {
         this.companyId = companyId;
         this.typeId = typeId;
         this.deadline = deadline;
+        this.postingType = postingType;
     }
 }

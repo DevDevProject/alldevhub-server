@@ -15,6 +15,7 @@ public class JobRecruitDetail {
     private String preference;
     private String benefit;
     private String process;
+    private String bodyUrl;
 
     public JobRecruitDetail(String responsibility, String requirement, String preference, String benefit, String process, Long jobRecruitId) {
         this.jobRecruitId = jobRecruitId;
@@ -23,5 +24,10 @@ public class JobRecruitDetail {
         this.preference = preference;
         this.benefit = benefit;
         this.process = process;
+    }
+
+    public JobRecruitDetail(String bodyUrl, Long jobRecruitId) {
+        this.jobRecruitId = jobRecruitId;
+        this.bodyUrl = bodyUrl;
     }
 }

@@ -5,8 +5,8 @@
 <mapper namespace="com.example.jobservice.mapper.JobRecruitMapper">
 
     <insert id="insert" parameterType="com.example.jobservice.vo.JobRecruit" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO job_recruit (title, work_experience, url, department_id, company_id, type_id, deadline)
-        VALUES (#{title}, #{workExperience}, #{url}, #{departmentId}, #{companyId}, #{typeId}, #{deadline})
+        INSERT INTO job_recruit (title, work_experience, url, department_id, company_id, type_id, deadline, posting_type)
+        VALUES (#{title}, #{workExperience}, #{url}, #{departmentId}, #{companyId}, #{typeId}, #{deadline}, #{postingType})
     </insert>
 
     <select id="findAll" resultMap="JobRecruitMap">
@@ -131,7 +131,7 @@
             </if>
             <if test="true">
                 AND (
-                    jr.deadline = '상시채용'
+                    jr.deadline LIKE '상시%'
                     OR jr.deadline >= CURRENT_DATE
                 )
             </if>
@@ -140,7 +140,7 @@
             <when test="sort == 'deadline'">
                 ORDER BY
                 CASE
-                WHEN jr.deadline = '상시채용' THEN 1
+                WHEN jr.deadline LIKE '상시%' THEN 1
                 ELSE 0
                 END,
                 jr.deadline ASC
@@ -229,7 +229,7 @@
             </if>
             <if test="true">
                 AND (
-                jr.deadline = '상시채용'
+                jr.deadline LIKE '상시%'
                 OR jr.deadline >= CURRENT_DATE
                 )
             </if>
@@ -239,6 +239,32 @@
     <select id="findAllUrls" resultType="string">
         SELECT jr.url
         FROM job_recruit as jr
+    </select>
+
+
+
+    <select id="findRecruitsByCompany" resultMap="JobRecruitMap">
+        SELECT
+            jr.id, jr.title, jr.created_at, jr.work_experience, jr.url,
+            c.name AS company_name, c.logo_url,
+            t.name AS type_name,
+            jr.deadline
+        FROM job_recruit jr
+        JOIN company c ON c.id = jr.company_id
+        JOIN type t ON t.id = jr.type_id
+        WHERE c.name = #{companyName}
+        AND (jr.deadline LIKE '상시%' OR jr.deadline >= CURRENT_DATE)
+        LIMIT #{pageable.pageSize}
+        OFFSET #{pageable.offset}
+    </select>
+    <select id="findRecruitsByCompanyCount" resultType="int" parameterType="string">
+        SELECT
+            COUNT(*)
+        FROM job_recruit jr
+         JOIN company c ON c.id = jr.company_id
+         JOIN type t ON t.id = jr.type_id
+        WHERE c.name = #{companyName}
+          AND (jr.deadline LIKE '상시%' OR jr.deadline >= CURRENT_DATE)
     </select>
 </mapper>
 

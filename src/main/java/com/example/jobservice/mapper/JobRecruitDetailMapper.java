@@ -13,4 +13,6 @@ public interface JobRecruitDetailMapper {
     RecruitDetailDataDto findRecruitDetail(@Param("recruitId") Long recruitId);
 
     RecruitOptionsDataDto findRecruitOptions(@Param("recruitId") Long recruitId);
+
+    void insertByImage(JobRecruitDetail jobRecruitDetail);
 }

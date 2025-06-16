@@ -5,14 +5,20 @@ import com.example.jobservice.dto.recruit.request.JobSearchCondition;
 import com.example.jobservice.dto.recruit.response.JobRecruitListResponseDto;
 import com.example.jobservice.dto.recruit.response.RecruitDetailResponseDto;
 import com.example.jobservice.facade.RecruitFacadeService;
+import com.example.jobservice.service.FileUploadService;
 import com.example.jobservice.service.JobRecruitService;
 import com.example.jobservice.vo.jobrecruit.JobRecruitPaging;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +29,19 @@ public class JobRecruitController {
 
     private final JobRecruitService jobRecruitService;
     private final RecruitFacadeService recruitFacadeService;
+    private final FileUploadService fileUploadService;
+    @PostMapping(value = "/save/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> insertJobRecruitImage(@RequestParam("data") String request,
+                                                   @RequestParam("image") MultipartFile image) throws IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        JobRecruitRequestDto dto = objectMapper.readValue(request, JobRecruitRequestDto.class);
+
+        jobRecruitService.saveOne(dto, image);
+
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("/save")
     public ResponseEntity<?> insertJobRecruits(@RequestBody JobRecruitRequestDto[] request) {
@@ -47,6 +66,13 @@ public class JobRecruitController {
     @GetMapping("/{recruitId}")
     public ResponseEntity<?> getRecruitDetail(@PathVariable Long recruitId) {
         RecruitDetailResponseDto response = recruitFacadeService.getRecruitDetails(recruitId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{companyName}/recruits")
+    public ResponseEntity<?> getRecruitsByCompany(@PathVariable String companyName, Pageable pageable) {
+        JobRecruitListResponseDto response = jobRecruitService.getRecruitsByCompany(companyName, pageable);
 
         return ResponseEntity.ok(response);
     }

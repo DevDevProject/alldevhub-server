@@ -22,7 +22,7 @@ public class FileUploadService {
     @Value("${cloud.aws.s3.bucket.prefix}")
     private String prefix;
 
-    public String uploadFile(MultipartFile file) throws IOException {
+    public String uploadImage(MultipartFile file) throws IOException {
         // 원래 파일 확장자 추출
         String originalFilename = file.getOriginalFilename();
         String extension = "";

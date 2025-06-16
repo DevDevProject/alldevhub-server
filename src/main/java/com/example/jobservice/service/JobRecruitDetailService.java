@@ -15,8 +15,13 @@ public class JobRecruitDetailService {
 
     private final JobRecruitDetailMapper jobRecruitDetailMapper;
 
-    public void save(JobRecruitRequestDto request, Long jobRecruitId) {
+    public void save(String bodyImageUrl, Long jobRecruitId) {
+        JobRecruitDetail jobRecruitDetail = new JobRecruitDetail(bodyImageUrl, jobRecruitId);
 
+        jobRecruitDetailMapper.insertByImage(jobRecruitDetail);
+    }
+
+    public void save(JobRecruitRequestDto request, Long jobRecruitId) {
         JobRecruitDetail jobRecruitDetail = new JobRecruitDetail(request.getDetail().getResponsibility(),
                 request.getDetail().getRequirement(), request.getDetail().getPreference(),
                 request.getDetail().getBenefit(), request.getDetail().getProcess(), jobRecruitId);

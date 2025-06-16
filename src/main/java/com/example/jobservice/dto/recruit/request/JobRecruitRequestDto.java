@@ -31,6 +31,7 @@ public class JobRecruitRequestDto {
         private String location;
         private String period;
         private String deadline;
+        private String postingType;
     }
 
     @Data
@@ -42,5 +43,6 @@ public class JobRecruitRequestDto {
         private String preference;
         private String benefit;
         private String process;
+        private String body;
     }
 }
