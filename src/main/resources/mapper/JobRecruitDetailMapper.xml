@@ -20,7 +20,7 @@
     </insert>
 
     <select id="findRecruitDetail" resultType="com.example.jobservice.dto.recruit.response.data.RecruitDetailDataDto">
-        SELECT responsibility, requirement, preference, benefit, process
+        SELECT responsibility, requirement, preference, benefit, process, body_url
         FROM job_recruit_detail as jrd
         WHERE jrd.job_recruit_id = #{recruitId}
     </select>

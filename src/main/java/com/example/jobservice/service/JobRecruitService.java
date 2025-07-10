@@ -6,6 +6,7 @@ import com.example.jobservice.dto.recruit.request.JobSearchCondition;
 import com.example.jobservice.dto.recruit.response.JobRecruitListResponseDto;
 import com.example.jobservice.dto.recruit.response.data.RecruitDetailDataDto;
 import com.example.jobservice.http.CompanyServiceClient;
+import com.example.jobservice.kafka.dto.RecruitCreatedMessage;
 import com.example.jobservice.mapper.*;
 import com.example.jobservice.vo.JobRecruit;
 import com.example.jobservice.vo.jobrecruit.JobRecruitPaging;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -50,9 +52,14 @@ public class JobRecruitService {
                 jobRecruitDetailService.save(request, jobRecruit.getId());
                 categoryService.save(request.getBasic().getCategory(), request.getDetail(), jobRecruit.getId());
 
-                RecruitCountMessage message = new RecruitCountMessage(request.getBasic().getCompany(), "count 증가");
+                RecruitCountMessage countMessage = new RecruitCountMessage(request.getBasic().getCompany(), "count 증가");
 
-                kafkaProducerService.sendRecruitCount(message);
+                RecruitCreatedMessage createMessage = new RecruitCreatedMessage(jobRecruit.getId(), companyId,
+                        request.getBasic().getCompany(), request.getBasic().getTitle(),
+                        LocalDateTime.now(), "recruit 생성");
+
+                kafkaProducerService.sendRecruitCountEvent(countMessage);
+                kafkaProducerService.sendRecruitCreatedEvent(createMessage);
             }
         }
         catch(Exception e) {
@@ -78,9 +85,14 @@ public class JobRecruitService {
             jobRecruitDetailService.save(imageUrl, jobRecruit.getId());
             categoryService.save(request.getBasic().getCategory(), request.getDetail().getBody(), jobRecruit.getId());
 
-            RecruitCountMessage message = new RecruitCountMessage(request.getBasic().getCompany(), "count 증가");
+            RecruitCountMessage countMessage = new RecruitCountMessage(request.getBasic().getCompany(), "count 증가");
 
-            kafkaProducerService.sendRecruitCount(message);
+            RecruitCreatedMessage createMessage = new RecruitCreatedMessage(jobRecruit.getId(), companyId,
+                    request.getBasic().getCompany(), request.getBasic().getTitle(),
+                    LocalDateTime.now(), "recruit 생성");
+
+            kafkaProducerService.sendRecruitCountEvent(countMessage);
+            kafkaProducerService.sendRecruitCreatedEvent(createMessage);
 
         }catch(Exception e) {
             e.printStackTrace();
@@ -98,9 +110,7 @@ public class JobRecruitService {
 
 
     public List<String> getAllUrls() {
-        List<String> urls = jobRecruitMapper.findAllUrls();
-
-        return urls;
+        return jobRecruitMapper.findAllUrls();
     }
 
     public RecruitDetailDataDto getRecruitDetail(Long recruitId) {

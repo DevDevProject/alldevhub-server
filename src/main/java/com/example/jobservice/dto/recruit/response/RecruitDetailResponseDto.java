@@ -38,6 +38,7 @@ public class RecruitDetailResponseDto {
         private String preference;
         private String benefit;
         private String process;
+        private String bodyUrl;
     }
 
     @Data
@@ -74,6 +75,7 @@ public class RecruitDetailResponseDto {
                                 .preference(detail.getPreference())
                                 .benefit(detail.getBenefit())
                                 .process(detail.getProcess())
+                                .bodyUrl(detail.getBodyUrl())
                                 .build()
                 )
                 .options(

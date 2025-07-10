@@ -10,4 +10,5 @@ public class RecruitDetailDataDto {
     private String preference;
     private String benefit;
     private String process;
+    private String bodyUrl;
 }
