@@ -5,8 +5,10 @@ import com.example.jobservice.dto.recruit.request.JobSearchCondition;
 import com.example.jobservice.dto.recruit.response.JobRecruitListResponseDto;
 import com.example.jobservice.dto.recruit.response.RecruitDetailResponseDto;
 import com.example.jobservice.facade.RecruitFacadeService;
+import com.example.jobservice.mapper.recruit.dto.JobRecruitPopular;
 import com.example.jobservice.service.FileUploadService;
 import com.example.jobservice.service.JobRecruitService;
+import com.example.jobservice.service.PopularService;
 import com.example.jobservice.vo.jobrecruit.JobRecruitPaging;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -29,7 +31,8 @@ public class JobRecruitController {
 
     private final JobRecruitService jobRecruitService;
     private final RecruitFacadeService recruitFacadeService;
-    private final FileUploadService fileUploadService;
+    private final PopularService popularService;
+
     @PostMapping(value = "/save/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> insertJobRecruitImage(@RequestParam("data") String request,
                                                    @RequestParam("image") MultipartFile image) throws IOException {
@@ -73,6 +76,13 @@ public class JobRecruitController {
     @GetMapping("/{companyName}/recruits")
     public ResponseEntity<?> getRecruitsByCompany(@PathVariable String companyName, Pageable pageable) {
         JobRecruitListResponseDto response = jobRecruitService.getRecruitsByCompany(companyName, pageable);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<?> getPopularRecruits() {
+        List<JobRecruitPopular> response = popularService.getPopularRecruits();
 
         return ResponseEntity.ok(response);
     }
