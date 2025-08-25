@@ -6,22 +6,18 @@ import com.example.jobservice.dto.recruit.response.JobRecruitListResponseDto;
 import com.example.jobservice.dto.recruit.response.RecruitDetailResponseDto;
 import com.example.jobservice.facade.RecruitFacadeService;
 import com.example.jobservice.mapper.recruit.dto.JobRecruitPopular;
-import com.example.jobservice.service.FileUploadService;
 import com.example.jobservice.service.JobRecruitService;
-import com.example.jobservice.service.PopularService;
-import com.example.jobservice.vo.jobrecruit.JobRecruitPaging;
+import com.example.jobservice.service.redis.PopularService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

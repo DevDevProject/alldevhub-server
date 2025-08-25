@@ -8,7 +8,7 @@ import com.example.jobservice.http.CompanyServiceClient;
 import com.example.jobservice.service.CompanyService;
 import com.example.jobservice.service.JobRecruitDetailService;
 import com.example.jobservice.service.JobRecruitService;
-import com.example.jobservice.service.PopularService;
+import com.example.jobservice.service.redis.PopularService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

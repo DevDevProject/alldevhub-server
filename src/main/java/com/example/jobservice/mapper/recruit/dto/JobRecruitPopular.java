@@ -1,10 +1,14 @@
 package com.example.jobservice.mapper.recruit.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class JobRecruitPopular {
 
     private Long id;
