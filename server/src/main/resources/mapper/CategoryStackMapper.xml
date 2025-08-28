@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.mapper.CategoryStackMapper">
+
+    <select id="findCategoriesByStackId" resultType="com.example.server.vo.Category">
+        SELECT c.*
+        FROM category_stack cs
+        JOIN category c ON cs.category_id = c.id
+        WHERE cs.stack_id = #{stackId}
+    </select>
+
+</mapper>

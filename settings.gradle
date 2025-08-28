@@ -1,1 +1,10 @@
 rootProject.name = 'job-service'
+
+include 'common'
+include 'redis'
+include 'redis:kafka'
+include 'kafka'
+include 'server'
+include 'src:main:java:com:example:infra'
+include 'infra'
+include 'http'

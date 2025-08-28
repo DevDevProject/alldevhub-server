@@ -1,0 +1,11 @@
+Java
+Spring
+Spring Boot
+MySQL
+JPA
+Redis
+AngularJS
+Linux
+Node.js
+ExpressJS
+

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.mapper.recruit.JobRecruitPopularMapper">
+    <select id="findPopularRecruits" resultType="com.example.server.mapper.recruit.dto.JobRecruitPopular">
+        SELECT jr.id, jr.title, jr.url, jr.work_experience, c.name AS company_name, jr.deadline
+        FROM job_recruit jr
+        JOIN company c on jr.company_id = c.id
+        WHERE jr.id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND (jr.deadline LIKE '상시%' OR jr.deadline >= CURRENT_DATE)
+    </select>
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.mapper.TypeMapper">
+
+    <!-- 부서명으로 부서 찾기 -->
+    <select id="findByName" parameterType="string" resultType="com.example.server.vo.Type">
+        SELECT id, name FROM type WHERE name = #{name}
+    </select>
+
+    <!-- 새로운 부서 추가 -->
+    <insert id="insert" parameterType="com.example.server.vo.Type" useGeneratedKeys="true" keyProperty="id">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO type (name) VALUES (#{name})
+    </insert>
+
+</mapper>
