@@ -5,12 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class PopularCacheService {
@@ -19,57 +21,67 @@ public class PopularCacheService {
     private final RedisLockService redisLock;
     private final RedisTemplate<String, Object> objectRedisTemplate;
 
-    private static final String HASH_TAG = "{pop}";
-    private static final String ZSET_KEY_PREFIX = "popular:recruit:{pop}:shard:";
-    private static final String GLOBAL_UNION_KEY = "popular:recruit:{pop}:union";
-    private static final String CACHE_KEY_PREFIX = "popular:recruit:{pop}:top:r";
-    private static final String REFRESH_LOCK_KEY = "lock:popular:recruit:{pop}:refresh";
+    private static final String GLOBAL_UNION_KEY = "popular:recruit:union";
+    private static final String CACHE_KEY_PREFIX = "popular:recruit:top";
 
-    private static final int SHARD_COUNT = 4;
+    private static final String ZSET_KEY = "popular:recruit";
+    private static final String ZSET_KEY_PREFIX = "popular:recruit:shard:";
+    private static final String REFRESH_LOCK_KEY = "lock:popular:recruit:refresh";
+
     private static final int CACHE_REPLICAS = 3;
+
+    private static final int SHARD_COUNT = 3;
 
     private static final Duration ZSET_TTL = Duration.ofHours(24);
     private static final Duration CACHE_TTL = Duration.ofHours(1);
     private static final Duration LOCK_TTL = Duration.ofSeconds(15);
 
-    /** 점수 증가 */
     public void increaseScore(Long id) {
-        int shard = Math.abs(id.hashCode()) % SHARD_COUNT;
+        int shard = Math.abs(id.hashCode() % SHARD_COUNT);
         String shardKey = ZSET_KEY_PREFIX + shard;
         redis.opsForZSet().incrementScore(shardKey, id.toString(), 1);
         redis.expire(shardKey, ZSET_TTL);
     }
 
-    /** 캐시 읽기 */
     @SuppressWarnings("unchecked")
     public <T> List<T> readCache(Class<T> clazz) {
-        String key = pickReplicaKey();
-        Object val = objectRedisTemplate.opsForValue().get(key);
+        Object val = objectRedisTemplate.opsForValue().get(CACHE_KEY_PREFIX);
         if (val instanceof List<?> list) {
             return (List<T>) list;
         }
         return Collections.emptyList();
     }
 
-    /** 캐시 쓰기 */
     public <T> void writeCache(List<T> data) {
-        for (int r = 0; r < CACHE_REPLICAS; r++) {
-            String k = CACHE_KEY_PREFIX + r;
-            objectRedisTemplate.opsForValue().set(k, data, CACHE_TTL);
-        }
+            objectRedisTemplate.opsForValue().set(CACHE_KEY_PREFIX, data, CACHE_TTL);
     }
 
-    /** 상위 id 추출 */
     public Set<String> getTopIds(int topN) {
-        List<String> shardKeys = new ArrayList<>(SHARD_COUNT);
+        List<String> shardKeys = new ArrayList<>();
         for (int i = 0; i < SHARD_COUNT; i++) {
             shardKeys.add(ZSET_KEY_PREFIX + i);
         }
-        unionShardsIntoGlobal(shardKeys);
-        return redis.opsForZSet().reverseRange(GLOBAL_UNION_KEY, 0, topN - 1);
+
+        Map<String, Double> scoreMap = new HashMap<>();
+        for (String shardKey : shardKeys) {
+            Set<ZSetOperations.TypedTuple<String>> tuples = redis.opsForZSet().reverseRangeWithScores(shardKey, 0, -1);
+            if (tuples != null) {
+                for (ZSetOperations.TypedTuple<String> t : tuples) {
+                    String id = t.getValue();
+                    Double score = t.getScore() != null ? t.getScore() : 0.0;
+                    scoreMap.put(id, scoreMap.getOrDefault(id, 0.0) + score);
+                }
+            }
+        }
+
+
+        return scoreMap.entrySet().stream()
+                       .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
+                       .limit(topN)
+                       .map(Map.Entry::getKey)
+                       .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    /** 락 */
     public String tryLock() {
         return redisLock.tryLock(REFRESH_LOCK_KEY, LOCK_TTL);
     }
