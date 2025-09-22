@@ -15,7 +15,7 @@ public class RedisCacheScheduler {
      * 1 시간 주기로 인기글 갱신
      * */
     @Scheduled(fixedRate = 1_000 * 60 * 60)
-    public void refresh() {
+    public void refresh() throws Exception {
         popularService.refreshPopularRecruitsCache();
     }
 }

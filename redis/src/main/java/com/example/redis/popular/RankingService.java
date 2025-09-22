@@ -1,19 +1,27 @@
 package com.example.redis.popular;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.example.redis.RedisLockService;
+import com.example.redis.record.RedisScoreRecord;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +29,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RankingService {
 
+    private final ExecutorService dbWriteExecutor;
     private final PopularCacheService cacheService;
+    private final StringRedisTemplate redis;
 
     private static final int SHARD_COUNT = 3;
     private static final String ZSET_KEY_PREFIX = "popular:recruit:shard:";
+    private static final int REDIS_BATCH_SIZE = 10_000;
 
     public void increaseScore(Long id) {
         int shard = Math.abs(id.hashCode() % SHARD_COUNT);
@@ -71,5 +82,29 @@ public class RankingService {
                              .limit(topN)
                              .map(Map.Entry::getKey)
                              .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    public void processZSetMembers(String shardKey, Consumer<List<RedisScoreRecord>> consumer) {
+        ScanOptions options = ScanOptions.scanOptions().count(REDIS_BATCH_SIZE).build();
+        Cursor<ZSetOperations.TypedTuple<String>> cursor = cacheService.scan(shardKey, options);
+
+        List<RedisScoreRecord> batchList = new ArrayList<>();
+        while (cursor.hasNext()) {
+            ZSetOperations.TypedTuple<String> t = cursor.next();
+            batchList.add(new RedisScoreRecord(
+                    t.getValue(),
+                    t.getScore() != null ? t.getScore() : 0.0
+            ));
+
+            if (batchList.size() >= REDIS_BATCH_SIZE) {
+                consumer.accept(new ArrayList<>(batchList));
+                batchList.clear();
+            }
+        }
+
+        if (!batchList.isEmpty()) {
+            consumer.accept(new ArrayList<>(batchList));
+            batchList.clear();
+        }
     }
 }
