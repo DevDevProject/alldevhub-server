@@ -2,17 +2,14 @@ package com.example.redis.popular;
 
 import com.example.redis.RedisLockService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class PopularCacheService {
@@ -42,6 +39,10 @@ public class PopularCacheService {
     public Long count(String key) {
         Long count = redis.opsForZSet().zCard(key);
         return count != null ? count : 0L;
+    }
+
+    public Cursor<ZSetOperations.TypedTuple<String>> scan(String key, ScanOptions options) {
+        return redis.opsForZSet().scan(key, options);
     }
 
     @SuppressWarnings("unchecked")

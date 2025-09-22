@@ -1,2 +1,3 @@
 com.example.infra.config.S3AutoConfiguration
 com.example.infra.config.WebAutoConfiguration
+com.example.infra.config.ThreadConfiguration

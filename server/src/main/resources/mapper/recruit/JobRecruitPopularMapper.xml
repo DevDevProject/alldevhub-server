@@ -13,4 +13,19 @@
         </foreach>
         AND (jr.deadline LIKE '상시%' OR jr.deadline >= CURRENT_DATE)
     </select>
+
+    <insert id="updateDailyViews">
+        INSERT INTO job_recruit_daily_views (recruit_id, view_date, views)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.recruitId}, #{item.viewDate}, #{item.views})
+        </foreach>
+        ON DUPLICATE KEY UPDATE views = views + VALUES(views)
+    </insert>
+
+    <insert id="insertOrUpdate">
+        INSERT INTO job_recruit_daily_views (recruit_id, view_date, views)
+        VALUES (#{recruitId}, #{viewDate}, #{views})
+        ON DUPLICATE KEY UPDATE views = views + VALUES(views)
+    </insert>
 </mapper>

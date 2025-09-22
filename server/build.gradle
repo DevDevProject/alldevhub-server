@@ -32,6 +32,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     testAnnotationProcessor 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 test {
