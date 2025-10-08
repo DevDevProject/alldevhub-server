@@ -1,6 +1,7 @@
 package com.example.kafka.producer;
 
 import com.example.common.dto.kafka.RecruitCountMessage;
+import com.example.common.dto.kafka.RecruitCreateDto;
 import com.example.common.dto.kafka.RecruitCreatedMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -18,5 +19,9 @@ public class KafkaProducerService {
 
     public void sendRecruitCreatedEvent(RecruitCreatedMessage message) {
         kafkaTemplate.send(RECRUIT_CREATED_TOPIC, message);
+    }
+
+    public void createRecruitEvent(RecruitCreateDto message) {
+        kafkaTemplate.send("recruit.create.event", message);
     }
 }

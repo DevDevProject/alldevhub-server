@@ -1,5 +1,6 @@
 package com.example.server.service;
 
+import com.example.common.dto.kafka.RecruitCreateDto;
 import com.example.infra.s3.FileUploadService;
 import com.example.server.dto.recruit.request.JobRecruitRequestDto;
 import com.example.server.dto.recruit.request.JobSearchCondition;
@@ -35,30 +36,32 @@ public class JobRecruitService {
     private final KafkaProducerService kafkaProducerService;
     private final FileUploadService fileUploadService;
 
+    //                Long departmentId = departmentService.getDepartmentId(request.getBasic().getDepartment());
+//                Long companyId = companyService.getCompanyId(request.getBasic().getCompany());
+//                Long typeId = typeService.getTypeId(request.getBasic().getType(), request.getBasic().getTitle());
+//
+//                JobRecruit jobRecruit = new JobRecruit(request.getBasic().getTitle(), request.getBasic().getWorkExperience(), request.getBasic().getUrl(),
+//                        departmentId, companyId, typeId, request.getBasic().getDeadline(), request.getBasic().getPostingType());
+//
+//                jobRecruitMapper.insert(jobRecruit);
+//
+//                jobRecruitDetailService.save(request, jobRecruit.getId());
+//                categoryService.save(request.getBasic().getCategory(), request.getDetail(), jobRecruit.getId());
+//
+//                RecruitCountMessage countMessage = new RecruitCountMessage(request.getBasic().getCompany(), "count 증가");
+//
+//                RecruitCreatedMessage createMessage = new RecruitCreatedMessage(jobRecruit.getId(), companyId,
+//                        request.getBasic().getCompany(), request.getBasic().getTitle(),
+//                        LocalDateTime.now(), "recruit 생성");
+
+//                kafkaProducerService.sendRecruitCountEvent(countMessage);
+//                kafkaProducerService.sendRecruitCreatedEvent(createMessage);
+
     @Transactional
-    public void save(JobRecruitRequestDto[] requests) {
+    public void save(RecruitCreateDto[] requests) {
         try{
-            for(JobRecruitRequestDto request : requests) {
-                Long departmentId = departmentService.getDepartmentId(request.getBasic().getDepartment());
-                Long companyId = companyService.getCompanyId(request.getBasic().getCompany());
-                Long typeId = typeService.getTypeId(request.getBasic().getType(), request.getBasic().getTitle());
-
-                JobRecruit jobRecruit = new JobRecruit(request.getBasic().getTitle(), request.getBasic().getWorkExperience(), request.getBasic().getUrl(),
-                        departmentId, companyId, typeId, request.getBasic().getDeadline(), request.getBasic().getPostingType());
-
-                jobRecruitMapper.insert(jobRecruit);
-
-                jobRecruitDetailService.save(request, jobRecruit.getId());
-                categoryService.save(request.getBasic().getCategory(), request.getDetail(), jobRecruit.getId());
-
-                RecruitCountMessage countMessage = new RecruitCountMessage(request.getBasic().getCompany(), "count 증가");
-
-                RecruitCreatedMessage createMessage = new RecruitCreatedMessage(jobRecruit.getId(), companyId,
-                        request.getBasic().getCompany(), request.getBasic().getTitle(),
-                        LocalDateTime.now(), "recruit 생성");
-
-                kafkaProducerService.sendRecruitCountEvent(countMessage);
-                kafkaProducerService.sendRecruitCreatedEvent(createMessage);
+            for(RecruitCreateDto request : requests) {
+                kafkaProducerService.createRecruitEvent(request);
             }
         }
         catch(Exception e) {
@@ -68,37 +71,37 @@ public class JobRecruitService {
 
     }
 
-    public void saveOne(JobRecruitRequestDto request, MultipartFile image) throws IOException {
-        try {
-            String imageUrl = fileUploadService.uploadImage(image);
-
-            Long departmentId = departmentService.getDepartmentId(request.getBasic().getDepartment());
-            Long companyId = companyService.getCompanyId(request.getBasic().getCompany());
-            Long typeId = typeService.getTypeId(request.getBasic().getType(), request.getBasic().getTitle());
-
-            JobRecruit jobRecruit = new JobRecruit(request.getBasic().getTitle(), request.getBasic().getWorkExperience(), request.getBasic().getUrl(),
-                    departmentId, companyId, typeId, request.getBasic().getDeadline(), request.getBasic().getPostingType());
-
-            jobRecruitMapper.insert(jobRecruit);
-
-            jobRecruitDetailService.save(imageUrl, jobRecruit.getId());
-            categoryService.save(request.getBasic().getCategory(), request.getDetail().getBody(), jobRecruit.getId());
-
-            RecruitCountMessage countMessage = new RecruitCountMessage(request.getBasic().getCompany(), "count 증가");
-
-            RecruitCreatedMessage createMessage = new RecruitCreatedMessage(jobRecruit.getId(), companyId,
-                    request.getBasic().getCompany(), request.getBasic().getTitle(),
-                    LocalDateTime.now(), "recruit 생성");
-
-            kafkaProducerService.sendRecruitCountEvent(countMessage);
-            kafkaProducerService.sendRecruitCreatedEvent(createMessage);
-
-        }catch(Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
-
-    }
+//    public void saveOne(JobRecruitRequestDto request, MultipartFile image) throws IOException {
+//        try {
+//            String imageUrl = fileUploadService.uploadImage(image);
+//
+//            Long departmentId = departmentService.getDepartmentId(request.getBasic().getDepartment());
+//            Long companyId = companyService.getCompanyId(request.getBasic().getCompany());
+//            Long typeId = typeService.getTypeId(request.getBasic().getType(), request.getBasic().getTitle());
+//
+//            JobRecruit jobRecruit = new JobRecruit(request.getBasic().getTitle(), request.getBasic().getWorkExperience(), request.getBasic().getUrl(),
+//                    departmentId, companyId, typeId, request.getBasic().getDeadline(), request.getBasic().getPostingType());
+//
+//            jobRecruitMapper.insert(jobRecruit);
+//
+//            jobRecruitDetailService.save(imageUrl, jobRecruit.getId());
+//            categoryService.save(request.getBasic().getCategory(), request.getDetail().getBody(), jobRecruit.getId());
+//
+//            RecruitCountMessage countMessage = new RecruitCountMessage(request.getBasic().getCompany(), "count 증가");
+//
+//            RecruitCreatedMessage createMessage = new RecruitCreatedMessage(jobRecruit.getId(), companyId,
+//                    request.getBasic().getCompany(), request.getBasic().getTitle(),
+//                    LocalDateTime.now(), "recruit 생성");
+//
+//            kafkaProducerService.sendRecruitCountEvent(countMessage);
+//            kafkaProducerService.sendRecruitCreatedEvent(createMessage);
+//
+//        }catch(Exception e) {
+//            e.printStackTrace();
+//            throw e;
+//        }
+//
+//    }
 
     public JobRecruitListResponseDto search(JobSearchCondition condition, Pageable pageable, String sort) {
         List<JobRecruitPaging> searchedRecruits = jobRecruitMapper.findAllWithConditions(condition, pageable, sort);

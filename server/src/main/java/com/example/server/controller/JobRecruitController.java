@@ -1,5 +1,6 @@
 package com.example.server.controller;
 
+import com.example.common.dto.kafka.RecruitCreateDto;
 import com.example.server.dto.recruit.request.JobRecruitRequestDto;
 import com.example.server.dto.recruit.request.JobSearchCondition;
 import com.example.server.dto.recruit.response.JobRecruitListResponseDto;
@@ -39,13 +40,13 @@ public class JobRecruitController {
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
         JobRecruitRequestDto dto = objectMapper.readValue(request, JobRecruitRequestDto.class);
 
-        jobRecruitService.saveOne(dto, image);
+//        jobRecruitService.saveOne(dto, image);
 
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> insertJobRecruits(@RequestBody JobRecruitRequestDto[] request) {
+    public ResponseEntity<?> insertJobRecruits(@RequestBody RecruitCreateDto[] request) {
         jobRecruitService.save(request);
 
         return ResponseEntity.ok().build();
