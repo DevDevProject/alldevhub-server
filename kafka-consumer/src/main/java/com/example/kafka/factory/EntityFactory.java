@@ -1,6 +1,7 @@
 package com.example.kafka.factory;
 
-import com.example.kafka.dto.RecruitCreateDto;
+//import com.example.kafka.dto.RecruitCreateDto;
+import com.example.common.dto.kafka.RecruitCreateDto;
 import com.example.kafka.entity.JobRecruit;
 import com.example.kafka.service.CompanyService;
 import com.example.kafka.service.DepartmentService;

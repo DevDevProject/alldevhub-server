@@ -3,7 +3,8 @@ package com.example.kafka.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.example.kafka.dto.RecruitCreateDto;
+//import com.example.kafka.dto.RecruitCreateDto;
+import com.example.common.dto.kafka.RecruitCreateDto;
 import com.example.kafka.entity.JobRecruit;
 import com.example.kafka.factory.EntityFactory;
 import com.example.kafka.repository.JobRecruitRepository;

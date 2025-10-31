@@ -1,4 +1,4 @@
-rootProject.name = 'job-service'
+rootProject.name = 'alldevhub-server'
 
 include 'common'
 include 'redis'
@@ -8,3 +8,5 @@ include 'src:main:java:com:example:infra'
 include 'infra'
 include 'http'
 include 'kafka-consumer'
+include 'open-source-service'
+include 'domain'
